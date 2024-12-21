@@ -1,5 +1,6 @@
 package com.iot.demo.service;
 
+import com.iot.demo.DTO.HourDataDTO;
 import com.iot.demo.entity.HourData;
 import com.iot.demo.repository.HourDataRepo;
 import jakarta.transaction.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,6 +43,19 @@ public class HourDataService {
         }
         hourDataString += "}";
         return hourDataString;
+    }
+
+    public List<HourDataDTO> getHourDataDTO(){
+        LocalDate today = LocalDateTime.now().toLocalDate();
+        List<HourData> hourData = hourDataRepo.findHourDataByDate(today);
+        List<HourDataDTO> hourDataDTOList = new ArrayList<>();
+        for (int i = 0; i < hourData.size(); i++) {
+            HourDataDTO hourDataDTO = new HourDataDTO();
+            hourDataDTO.setHour(hourData.get(i).getHour());
+            hourDataDTO.setEnergy(hourData.get(i).getEnergy());
+            hourDataDTOList.add(hourDataDTO);
+        }
+        return hourDataDTOList;
     }
 
     public void updateHourData(float newEnergy){
