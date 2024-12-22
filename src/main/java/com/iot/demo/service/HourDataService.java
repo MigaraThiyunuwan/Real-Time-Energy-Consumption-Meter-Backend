@@ -1,7 +1,9 @@
 package com.iot.demo.service;
 
 import com.iot.demo.DTO.HourDataDTO;
+import com.iot.demo.entity.DayData;
 import com.iot.demo.entity.HourData;
+import com.iot.demo.repository.DayDataRepo;
 import com.iot.demo.repository.HourDataRepo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ public class HourDataService {
 
     @Autowired
     private HourDataRepo hourDataRepo;
+    @Autowired
+    private DayDataRepo dayDataRepo;
 
     public String getHourData(){
         String hourDataString = "Hour Data:{";
@@ -62,6 +66,18 @@ public class HourDataService {
         int hour = LocalDateTime.now().getHour();
         LocalDate date = LocalDateTime.now().toLocalDate();
         HourData hourData = hourDataRepo.findHourDataByHourAndDate(hour, date);
+        DayData dayData = dayDataRepo.findDayDataByDate(date);
+
+        if (dayData == null) {
+            dayData = new DayData();
+            dayData.setDate(date);
+            dayData.setEnergy(newEnergy);
+        }else {
+            float currentEnergy = dayData.getEnergy();
+            float newEnergy1 = currentEnergy + newEnergy;
+            dayData.setEnergy(newEnergy1);
+        }
+
         if (hourData == null) {
             hourData = new HourData();
             hourData.setEnergy(newEnergy);
@@ -70,6 +86,8 @@ public class HourDataService {
             float newEnergy1 = currentEnergy + newEnergy;
             hourData.setEnergy(newEnergy1);
         }
+
         hourDataRepo.save(hourData);
+        dayDataRepo.save(dayData);
     }
 }

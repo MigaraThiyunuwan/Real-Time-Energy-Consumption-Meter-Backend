@@ -1,8 +1,10 @@
 package com.iot.demo.controller;
 
+import com.iot.demo.DTO.DayDataDTO;
 import com.iot.demo.DTO.EnergyDataDTO;
 import com.iot.demo.DTO.HourDataDTO;
 import com.iot.demo.EnergyWebSocketHandler;
+import com.iot.demo.service.DayDataService;
 import com.iot.demo.service.HourDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,9 @@ public class EnergyDataController {
 
     @Autowired
     private HourDataService hourDataService;
+
+    @Autowired
+    private DayDataService dayDataService;
 
     @PostMapping("/simulate")
     public void simulateEnergyData(@RequestBody EnergyDataDTO energyDataDTO) {
@@ -36,6 +41,11 @@ public class EnergyDataController {
     @GetMapping("gethourdata")
     public List<HourDataDTO> getHourData() {
         return hourDataService.getHourDataDTO();
+    }
+
+    @GetMapping("getdaydata")
+    public List<DayDataDTO> getDayData() {
+        return dayDataService.getDayData();
     }
 
 }
