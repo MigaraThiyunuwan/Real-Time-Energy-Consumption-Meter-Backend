@@ -17,7 +17,7 @@ public class EnergyDataDTO {
         float powerFactorFloat = (float) poweFactor;
         this.voltage = voltage;
         this.current = current;
-        this.power = current * voltage * powerFactorFloat;
+        this.power = (current/1000) * voltage * powerFactorFloat;
     }
 
     // Getter for voltage
